@@ -14,8 +14,8 @@
         .logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; letter-spacing: 2px; color: #8B7355; text-decoration: none; white-space: nowrap; }
         .logo span { font-weight: 400; font-style: italic; color: #B8A89A; }
         .header-right { display: flex; align-items: center; gap: 24px; }
-        .phone { font-size: 15px; font-weight: 500; color: #4A3F35; text-decoration: none; white-space: nowrap; }
-        .phone:hover { color: #8B7355; }
+        
+        /* Убрали телефон из шапки, оставили только иконку корзины */
         .cart-icon { position: relative; cursor: pointer; font-size: 22px; text-decoration: none; color: #4A3F35; }
         .cart-count { position: absolute; top: -8px; right: -10px; background: #C4A882; color: #fff; font-size: 11px; font-weight: 600; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
@@ -70,22 +70,31 @@
         .modal .btn-pay:hover { background: #7A6548; }
         .modal .close-modal { float: right; background: none; border: none; font-size: 24px; color: #B8A89A; cursor: pointer; line-height: 1; }
 
-        /* Подвал */
-        .footer { background: #FFFFFF; border-top: 1px solid #EAE0D5; padding: 36px 24px; text-align: center; font-size: 13px; color: #9A8A7A; }
-        .footer .phone-footer { font-size: 16px; font-weight: 500; color: #4A3F35; text-decoration: none; display: inline-block; margin: 8px 0; }
+        /* Подвал (Footer) */
+        .footer { background: #FFFFFF; border-top: 1px solid #EAE0D5; padding: 40px 24px; text-align: center; font-size: 13px; color: #9A8A7A; }
+        .footer .phone-footer { font-size: 18px; font-weight: 500; color: #4A3F35; text-decoration: none; display: inline-block; margin: 10px 0; }
         .footer .phone-footer:hover { color: #8B7355; }
         .footer .note { margin-top: 12px; font-size: 12px; color: #B8A89A; }
+        
+        /* Соцсети */
+        .social-links { margin: 20px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .social-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 500; color: #fff; transition: opacity 0.2s; }
+        .social-btn:hover { opacity: 0.8; }
+        .social-btn.vk { background-color: #0077FF; }
+        .social-btn.wa { background-color: #25D366; }
+        .social-btn.tg { background-color: #0088cc; }
+        .social-btn.inst { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
         @media (max-width: 700px) {
             .header { flex-wrap: wrap; gap: 10px; padding: 14px 16px; }
             .logo { font-size: 22px; }
-            .header-right { gap: 16px; }
-            .phone { font-size: 13px; }
             .nav-menu { gap: 18px; font-size: 12px; padding: 10px 16px; }
             .hero h1 { font-size: 30px; }
             .hero p { font-size: 14px; }
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
             .product-image { height: 200px; }
+            .social-links { flex-direction: column; align-items: center; }
+            .social-btn { width: 80%; }
         }
     </style>
 </head>
@@ -94,8 +103,6 @@
 <header class="header">
     <a href="#" class="logo">Aromat <span>Kungur</span></a>
     <div class="header-right">
-        <!-- Реальный номер телефона мамы -->
-        <a href="tel:+79082461131" class="phone">+7 (908) 246-11-31</a>
         <a href="#" class="cart-icon" id="cartIcon" title="Корзина">🛒<span class="cart-count" id="cartCount">0</span></a>
     </div>
 </header>
@@ -146,47 +153,31 @@
 
 <footer class="footer" id="contact">
     <div><strong>Aromat Kungur</strong> — оригинальная парфюмерия</div>
+    
+    <!-- Телефон теперь только здесь -->
     <a href="tel:+79082461131" class="phone-footer">+7 (908) 246-11-31</a>
+    
+    <!-- Блок с соцсетями -->
+    <div class="social-links">
+        <!-- ⚠️ Замените ссылки в href на реальные страницы мамы -->
+        <a href="https://vk.com/id585432695" target="_blank" class="social-btn vk">ВКонтакте</a>
+        <a href="https://wa.me/79082461131" target="_blank" class="social-btn wa">WhatsApp</a>
+        <a href="https://t.me/ВАШ_НИК_В_ТЕЛЕГРАМ" target="_blank" class="social-btn tg">Telegram</a>
+        <a href="https://instagram.com/ВАШ_НИК_В_ИНСТЕ" target="_blank" class="social-btn inst">Instagram</a>
+    </div>
+
     <div class="note">Доставка через СДЭК и другие ПВЗ • Оплата картой или СБП</div>
 </footer>
 
 <script>
     // ============================================================
-    // ⚠️ ТОВАРЫ: замените image на реальные фото и укажите цены
+    // ⚠️ ТОВАРЫ
     // ============================================================
     const products = [
-        {
-            id: 1,
-            name: "Cedar Chic",
-            brand: "Carolina Herrera",
-            price: 4500,          // ← укажите реальную цену
-            image: "",           // ← вставьте имя файла, например "cedar.jpg"
-            inStock: true
-        },
-        {
-            id: 2,
-            name: "Amouage (аромат)",
-            brand: "Amouage",
-            price: 8900,          // ← укажите реальную цену
-            image: "",
-            inStock: true
-        },
-        {
-            id: 3,
-            name: "Роза и мускус",
-            brand: "Aromat Kungur",
-            price: 2500,
-            image: "",
-            inStock: true
-        },
-        {
-            id: 4,
-            name: "Ваниль и амбра",
-            brand: "Aromat Kungur",
-            price: 2800,
-            image: "",
-            inStock: false
-        }
+        { id: 1, name: "Cedar Chic", brand: "Carolina Herrera", price: 4500, image: "", inStock: true },
+        { id: 2, name: "Amouage (аромат)", brand: "Amouage", price: 8900, image: "", inStock: true },
+        { id: 3, name: "Роза и мускус", brand: "Aromat Kungur", price: 2500, image: "", inStock: true },
+        { id: 4, name: "Ваниль и амбра", brand: "Aromat Kungur", price: 2800, image: "", inStock: false }
     ];
 
     const grid = document.getElementById('productsGrid');
@@ -215,7 +206,6 @@
         grid.appendChild(card);
     });
 
-    // Переключение наличия
     let cartItems = [];
     document.querySelectorAll('.stock-toggle').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -241,7 +231,6 @@
         });
     });
 
-    // Модальное окно
     let currentProductId = null;
     document.querySelectorAll('.btn-order').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -249,8 +238,7 @@
             const product = products.find(p => p.id === id);
             if (!product || !product.inStock) return;
             currentProductId = id;
-            document.getElementById('modalProductName').textContent =
-                product.name + ' — ' + product.price.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('modalProductName').textContent = product.name + ' — ' + product.price.toLocaleString('ru-RU') + ' ₽';
             document.getElementById('modalOverlay').classList.add('active');
         });
     });
@@ -262,7 +250,9 @@
         if (e.target === this) this.classList.remove('active');
     });
 
-    // Оплата и отправка заказа
+    // ============================================================
+    // ⚠️ ОТПРАВКА ЗАКАЗА И ОПЛАТА
+    // ============================================================
     document.getElementById('btnPay').addEventListener('click', function() {
         const name = document.getElementById('customerName').value.trim();
         const phone = document.getElementById('customerPhone').value.trim();
@@ -276,30 +266,24 @@
 
         const product = products.find(p => p.id === currentProductId);
 
-        // ============================================================
-        // ⚠️ ОТПРАВКА ЗАКАЗА МАМЕ
-        // ============================================================
-        // Чтобы заказ реально приходил маме, нужно использовать Telegram-бота.
-        // 1. Создайте бота через @BotFather в Telegram, получите TOKEN.
-        // 2. Узнайте chat_id мамы (напишите боту, затем откройте
-        //    https://api.telegram.org/bot<TOKEN>/getUpdates).
-        // 3. Раскомментируйте код ниже и вставьте свои данные.
-        //
-        // const TOKEN = 'ВАШ_ТОКЕН';
-        // const CHAT_ID = 'CHAT_ID_МАМЫ';
-        // const text = `🛒 Новый заказ!\nТовар: ${product.name}\nЦена: ${product.price} ₽\nИмя: ${name}\nТелефон: ${phone}\nПВЗ: ${city}\nОплата: ${payment}`;
-        // fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`);
+        // ССЫЛКА НА ВАШУ ОПЛАТУ ПО СБП ИЛИ КАРТЕ (вставьте сюда)
+        const paymentLink = "https://ВАША_ССЫЛКА_НА_ОПЛАТУ"; 
 
-        alert(
-            '✅ Заказ оформлен (демо)!\n\n' +
-            'Товар: ' + product.name + '\n' +
-            'Сумма: ' + product.price + ' ₽\n' +
-            'Имя: ' + name + '\n' +
-            'Телефон: ' + phone + '\n' +
-            'ПВЗ: ' + city + '\n' +
-            'Оплата: ' + (payment === 'card' ? 'Карта' : 'СБП') + '\n\n' +
-            '⚠️ Чтобы заказ приходил маме, настройте Telegram-бота в коде.'
-        );
+        // --- ОТПРАВКА В TELEGRAM МАМЕ ---
+        // (Раскомментируйте код ниже и вставьте свои данные)
+        /*
+        const TOKEN = 'ТОКЕН_ВАШЕГО_БОТА';
+        const CHAT_ID = 'ID_ЧАТА_МАМЫ';
+        const text = `🛒 Новый заказ!\nТовар: ${product.name}\nЦена: ${product.price} ₽\nИмя: ${name}\nТелефон: ${phone}\nПВЗ: ${city}\nОплата: ${payment}`;
+        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`);
+        */
+
+        // Перенаправляем на оплату
+        if (paymentLink !== "https://ВАША_ССЫЛКА_НА_ОПЛАТУ") {
+            window.location.href = paymentLink;
+        } else {
+            alert('✅ Заказ оформлен (демо)!\n\nОплата пока не подключена. Замените ссылку paymentLink в коде на вашу реальную ссылку.');
+        }
 
         cartItems.push(currentProductId);
         document.getElementById('cartCount').textContent = cartItems.length;
