@@ -64,16 +64,14 @@
 
         .product-price { font-size: 20px; font-weight: 600; color: #8B7355; margin-bottom: 12px; }
 
-        /* Статус наличия (статичный) */
         .stock-status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #6B5F54; margin-bottom: 12px; }
         .stock-indicator { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .stock-indicator.in-stock { background: #7CB87C; box-shadow: 0 0 0 3px rgba(124, 184, 124, 0.2); }
         .stock-indicator.out-of-stock { background: #D4A5A5; box-shadow: 0 0 0 3px rgba(212, 165, 165, 0.2); }
 
-        /* Кнопка переключения для админа (скрыта по умолчанию) */
         .admin-toggle { display: none; background: #F7F2EB; border: 1px solid #EAE0D5; border-radius: 20px; padding: 6px 12px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #6B5F54; cursor: pointer; margin-bottom: 12px; width: fit-content; transition: background 0.2s; }
         .admin-toggle:hover { background: #EFE8DE; }
-        .admin-mode .admin-toggle { display: inline-block; }
+        body.admin-mode .admin-toggle { display: inline-block; }
 
         .btn-order { margin-top: auto; background: #8B7355; color: #FFFFFF; border: none; border-radius: 30px; padding: 12px 20px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; cursor: pointer; transition: background 0.2s, transform 0.1s; }
         .btn-order:hover:not(:disabled) { background: #7A6548; }
@@ -249,7 +247,7 @@
     }
 
     // ============================================================
-    // ⚠️ ТОВАРЫ — ВПИШИТЕ РЕАЛЬНЫЕ ЦЕНЫ ЗА 3 МЛ
+    // ⚠️ ТОВАРЫ
     // ============================================================
     const products = [
         {
@@ -305,21 +303,17 @@
     // --- Отрисовка карточек товаров ---
     const grid = document.getElementById('productsGrid');
     
-    // Функция отрисовки одной карточки (чтобы можно было перерисовывать при смене наличия)
     function renderProductCard(p) {
-        // Считаем цены для разных объемов
         const p5 = Math.round(p.price3ml * 1.6);
         const p10 = Math.round(p.price3ml * 3);
         const pFull = Math.round(p.price3ml * 15);
 
         const imgContent = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="placeholder-text">📷 Фото: ${p.name}</span>`;
         
-        // Статус наличия
         const stockHtml = p.inStock 
             ? `<div class="stock-status"><span class="stock-indicator in-stock"></span> В наличии</div>`
             : `<div class="stock-status"><span class="stock-indicator out-of-stock"></span> Нет в наличии</div>`;
 
-        // Кнопка админа (видна только в админ-режиме)
         const adminBtnHtml = `<button class="admin-toggle" onclick="toggleStock(${p.id})">🔄 Переключить наличие</button>`;
 
         return `
@@ -348,7 +342,6 @@
         `;
     }
 
-    // Отрисовка всех карточек
     products.forEach(p => {
         const card = document.createElement('div');
         card.className = 'product-card';
@@ -358,14 +351,17 @@
     });
 
     // --- Обновление цены при выборе объема ---
-    document.querySelectorAll('.volume-select').forEach(select => {
-        select.addEventListener('change', function() {
-            const id = this.dataset.id;
-            const selectedOption = this.options[this.selectedIndex];
-            const price = selectedOption.dataset.price;
-            document.getElementById(`price-display-${id}`).textContent = parseInt(price).toLocaleString('ru-RU') + ' ₽';
+    function attachVolumeListeners() {
+        document.querySelectorAll('.volume-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const selectedOption = this.options[this.selectedIndex];
+                const price = selectedOption.dataset.price;
+                document.getElementById(`price-display-${id}`).textContent = parseInt(price).toLocaleString('ru-RU') + ' ₽';
+            });
         });
-    });
+    }
+    attachVolumeListeners();
 
     // --- Функция переключения наличия (только для админа) ---
     window.toggleStock = function(id) {
@@ -377,38 +373,32 @@
         const product = products.find(p => p.id === id);
         if (!product) return;
 
-        // Меняем статус
         product.inStock = !product.inStock;
 
         // Перерисовываем карточку
         const card = document.getElementById(`card-${id}`);
         card.innerHTML = renderProductCard(product);
 
-        // Переназначаем обработчик выбора объема для этой карточки
-        const select = card.querySelector('.volume-select');
-        select.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const price = selectedOption.dataset.price;
-            document.getElementById(`price-display-${id}`).textContent = parseInt(price).toLocaleString('ru-RU') + ' ₽';
-        });
-
-        // Обновляем обработчик кнопки "Заказать" для этой карточки
-        const orderBtn = card.querySelector('.btn-order');
-        if (orderBtn) {
-            orderBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату.');
-            });
-        }
+        // Переназначаем обработчики
+        attachVolumeListeners();
+        attachOrderListeners();
     };
 
     // --- БЛОКИРОВКА ЗАКАЗА ---
-    document.querySelectorAll('.btn-order').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату. Совсем скоро вы сможете заказать духи прямо на сайте!');
+    function attachOrderListeners() {
+        document.querySelectorAll('.btn-order').forEach(btn => {
+            // Удаляем старый обработчик, чтобы не было дублей
+            btn.replaceWith(btn.cloneNode(true));
         });
-    });
+        
+        document.querySelectorAll('.btn-order').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату. Совсем скоро вы сможете заказать духи прямо на сайте!');
+            });
+        });
+    }
+    attachOrderListeners();
 
     document.getElementById('cartIcon').addEventListener('click', function(e) {
         e.preventDefault();
@@ -436,4 +426,40 @@
     }
 
     function saveMyReviewId(id) {
-       
+        const myIds = getMyReviewIds();
+        myIds.push(id);
+        localStorage.setItem('myReviewIds', JSON.stringify(myIds));
+    }
+
+    function renderReviews() {
+        const reviews = loadReviews();
+        const myIds = getMyReviewIds();
+        reviewsList.innerHTML = '';
+        
+        if (reviews.length === 0) {
+            reviewsList.innerHTML = '<div style="color:#9A8A7A; grid-column: 1/-1; text-align:center;">Пока нет отзывов. Будьте первым!</div>';
+            return;
+        }
+
+        [...reviews].reverse().forEach((rev) => {
+            const card = document.createElement('div');
+            card.className = 'review-card';
+            
+            const isMyReview = myIds.includes(rev.id);
+            const deleteBtnHtml = isMyReview 
+                ? `<button class="btn-delete-review" onclick="deleteReview('${rev.id}')">Удалить</button>` 
+                : '';
+
+            card.innerHTML = `
+                ${deleteBtnHtml}
+                <div class="review-author">${rev.name}</div>
+                <div class="review-date">${rev.date}</div>
+                <div class="review-text">${rev.text}</div>
+            `;
+            reviewsList.appendChild(card);
+        });
+    }
+
+    btnSubmitReview.addEventListener('click', () => {
+        const name = reviewNameInput.value.trim();
+        const text =
