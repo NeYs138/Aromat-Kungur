@@ -64,11 +64,16 @@
 
         .product-price { font-size: 20px; font-weight: 600; color: #8B7355; margin-bottom: 12px; }
 
-        .stock-toggle { display: inline-flex; align-items: center; gap: 8px; background: #F7F2EB; border: none; border-radius: 30px; padding: 6px 14px 6px 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 500; color: #6B5F54; margin-bottom: 14px; transition: background 0.2s; width: fit-content; }
-        .stock-toggle:hover { background: #EFE8DE; }
+        /* Статус наличия (статичный) */
+        .stock-status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #6B5F54; margin-bottom: 12px; }
         .stock-indicator { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .stock-indicator.in-stock { background: #7CB87C; box-shadow: 0 0 0 3px rgba(124, 184, 124, 0.2); }
         .stock-indicator.out-of-stock { background: #D4A5A5; box-shadow: 0 0 0 3px rgba(212, 165, 165, 0.2); }
+
+        /* Кнопка переключения для админа (скрыта по умолчанию) */
+        .admin-toggle { display: none; background: #F7F2EB; border: 1px solid #EAE0D5; border-radius: 20px; padding: 6px 12px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #6B5F54; cursor: pointer; margin-bottom: 12px; width: fit-content; transition: background 0.2s; }
+        .admin-toggle:hover { background: #EFE8DE; }
+        .admin-mode .admin-toggle { display: inline-block; }
 
         .btn-order { margin-top: auto; background: #8B7355; color: #FFFFFF; border: none; border-radius: 30px; padding: 12px 20px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; cursor: pointer; transition: background 0.2s, transform 0.1s; }
         .btn-order:hover:not(:disabled) { background: #7A6548; }
@@ -232,6 +237,18 @@
 
 <script>
     // ============================================================
+    // ⚠️ НАСТРОЙКА АДМИН-РЕЖИМА
+    // ============================================================
+    // Секретный ключ. Чтобы включить админку, добавьте в адресную строку: ?admin=arom2026
+    const ADMIN_KEY = 'arom2026'; 
+    const isAdmin = window.location.search.includes(`admin=${ADMIN_KEY}`);
+
+    // Если это админ, добавляем класс на body, который покажет кнопки
+    if (isAdmin) {
+        document.body.classList.add('admin-mode');
+    }
+
+    // ============================================================
     // ⚠️ ТОВАРЫ — ВПИШИТЕ РЕАЛЬНЫЕ ЦЕНЫ ЗА 3 МЛ
     // ============================================================
     const products = [
@@ -239,7 +256,7 @@
             id: 1,
             name: "Dirty Pineapple",
             brand: "Richard",
-            price3ml: 1500, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            price3ml: 1500,
             image: "",
             inStock: true,
             desc: "Верхние ноты: Ананас, Клубника и Альдегиды; средние ноты: Ананас, Взбитые сливки и Лайм; базовые ноты: Ананас, Мускус и Ваниль."
@@ -248,7 +265,7 @@
             id: 2,
             name: "Tilia",
             brand: "Marc-Antoine Barrois",
-            price3ml: 1800, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            price3ml: 1800,
             image: "",
             inStock: true,
             desc: "Цветочный древесно-мускусный аромат. Верхние ноты: Липовый цвет, Жасмин Самбак и Дрок; средние ноты: Гелиотроп, Ветивер и Цветок апельсина; базовые ноты: Ambrofix™ и Georgywood."
@@ -257,7 +274,7 @@
             id: 3,
             name: "Ganymede",
             brand: "Marc-Antoine Barrois",
-            price3ml: 1800, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            price3ml: 1800,
             image: "",
             inStock: true,
             desc: "Замшево-кожаные ноты с легкостью фиалки и живостью мандарина. Контрастный и элегантный аромат."
@@ -266,7 +283,7 @@
             id: 4,
             name: "Apres I Amour",
             brand: "Тomas Kosmala no 4",
-            price3ml: 1600, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            price3ml: 1600,
             image: "",
             inStock: true,
             desc: "Роскошный и сексуальный аромат. Стартует зелеными прохладными акцентами листьев апельсина и пряной цедры лимона. Шлейф из сухой древесины, амбры и мускуса."
@@ -287,17 +304,25 @@
 
     // --- Отрисовка карточек товаров ---
     const grid = document.getElementById('productsGrid');
-    products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        const imgContent = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="placeholder-text">📷 Фото: ${p.name}</span>`;
-
-        // Считаем цены для разных объемов (3 мл = базовая)
+    
+    // Функция отрисовки одной карточки (чтобы можно было перерисовывать при смене наличия)
+    function renderProductCard(p) {
+        // Считаем цены для разных объемов
         const p5 = Math.round(p.price3ml * 1.6);
         const p10 = Math.round(p.price3ml * 3);
         const pFull = Math.round(p.price3ml * 15);
 
-        card.innerHTML = `
+        const imgContent = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="placeholder-text">📷 Фото: ${p.name}</span>`;
+        
+        // Статус наличия
+        const stockHtml = p.inStock 
+            ? `<div class="stock-status"><span class="stock-indicator in-stock"></span> В наличии</div>`
+            : `<div class="stock-status"><span class="stock-indicator out-of-stock"></span> Нет в наличии</div>`;
+
+        // Кнопка админа (видна только в админ-режиме)
+        const adminBtnHtml = `<button class="admin-toggle" onclick="toggleStock(${p.id})">🔄 Переключить наличие</button>`;
+
+        return `
             <div class="product-image">${imgContent}</div>
             <div class="product-info">
                 <div class="product-name">${p.name}</div>
@@ -313,15 +338,22 @@
 
                 <div class="product-price" id="price-display-${p.id}">${p.price3ml.toLocaleString('ru-RU')} ₽</div>
 
-                <button class="stock-toggle" data-id="${p.id}">
-                    <span class="stock-indicator ${p.inStock ? 'in-stock' : 'out-of-stock'}"></span>
-                    <span class="stock-label">${p.inStock ? 'В наличии' : 'Нет в наличии'}</span>
-                </button>
+                ${stockHtml}
+                ${adminBtnHtml}
+                
                 <button class="btn-order" data-id="${p.id}" ${p.inStock ? '' : 'disabled'}>
                     ${p.inStock ? 'Заказать' : 'Недоступно'}
                 </button>
             </div>
         `;
+    }
+
+    // Отрисовка всех карточек
+    products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.id = `card-${p.id}`;
+        card.innerHTML = renderProductCard(p);
         grid.appendChild(card);
     });
 
@@ -335,26 +367,40 @@
         });
     });
 
-    // --- Кнопка наличия ---
-    document.querySelectorAll('.stock-toggle').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const id = parseInt(this.dataset.id);
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-            product.inStock = !product.inStock;
-            const indicator = this.querySelector('.stock-indicator');
-            const label = this.querySelector('.stock-label');
-            const orderBtn = this.closest('.product-info').querySelector('.btn-order');
-            if (product.inStock) {
-                indicator.className = 'stock-indicator in-stock'; label.textContent = 'В наличии';
-                orderBtn.disabled = false; orderBtn.textContent = 'Заказать';
-            } else {
-                indicator.className = 'stock-indicator out-of-stock'; label.textContent = 'Нет в наличии';
-                orderBtn.disabled = true; orderBtn.textContent = 'Недоступно';
-            }
+    // --- Функция переключения наличия (только для админа) ---
+    window.toggleStock = function(id) {
+        if (!isAdmin) {
+            alert('У вас нет прав для изменения наличия.');
+            return;
+        }
+
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+
+        // Меняем статус
+        product.inStock = !product.inStock;
+
+        // Перерисовываем карточку
+        const card = document.getElementById(`card-${id}`);
+        card.innerHTML = renderProductCard(product);
+
+        // Переназначаем обработчик выбора объема для этой карточки
+        const select = card.querySelector('.volume-select');
+        select.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const price = selectedOption.dataset.price;
+            document.getElementById(`price-display-${id}`).textContent = parseInt(price).toLocaleString('ru-RU') + ' ₽';
         });
-    });
+
+        // Обновляем обработчик кнопки "Заказать" для этой карточки
+        const orderBtn = card.querySelector('.btn-order');
+        if (orderBtn) {
+            orderBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату.');
+            });
+        }
+    };
 
     // --- БЛОКИРОВКА ЗАКАЗА ---
     document.querySelectorAll('.btn-order').forEach(btn => {
@@ -390,87 +436,4 @@
     }
 
     function saveMyReviewId(id) {
-        const myIds = getMyReviewIds();
-        myIds.push(id);
-        localStorage.setItem('myReviewIds', JSON.stringify(myIds));
-    }
-
-    function renderReviews() {
-        const reviews = loadReviews();
-        const myIds = getMyReviewIds();
-        reviewsList.innerHTML = '';
-        
-        if (reviews.length === 0) {
-            reviewsList.innerHTML = '<div style="color:#9A8A7A; grid-column: 1/-1; text-align:center;">Пока нет отзывов. Будьте первым!</div>';
-            return;
-        }
-
-        [...reviews].reverse().forEach((rev) => {
-            const card = document.createElement('div');
-            card.className = 'review-card';
-            
-            const isMyReview = myIds.includes(rev.id);
-            const deleteBtnHtml = isMyReview 
-                ? `<button class="btn-delete-review" onclick="deleteReview('${rev.id}')">Удалить</button>` 
-                : '';
-
-            card.innerHTML = `
-                ${deleteBtnHtml}
-                <div class="review-author">${rev.name}</div>
-                <div class="review-date">${rev.date}</div>
-                <div class="review-text">${rev.text}</div>
-            `;
-            reviewsList.appendChild(card);
-        });
-    }
-
-    btnSubmitReview.addEventListener('click', () => {
-        const name = reviewNameInput.value.trim();
-        const text = reviewTextInput.value.trim();
-
-        if (!name || !text) {
-            alert('Пожалуйста, заполните имя и текст отзыва.');
-            return;
-        }
-
-        const reviews = loadReviews();
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-        
-        const newId = Date.now().toString();
-        const newReview = { id: newId, name: name, text: text, date: dateStr };
-        
-        reviews.push(newReview);
-        saveReviews(reviews);
-        saveMyReviewId(newId);
-        
-        reviewNameInput.value = '';
-        reviewTextInput.value = '';
-        renderReviews();
-    });
-
-    window.deleteReview = function(id) {
-        const myIds = getMyReviewIds();
-        
-        if (!myIds.includes(id)) {
-            alert('Вы не можете удалить чужой отзыв!');
-            return;
-        }
-
-        if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
-            let reviews = loadReviews();
-            reviews = reviews.filter(rev => rev.id !== id);
-            saveReviews(reviews);
-            
-            const newMyIds = myIds.filter(myId => myId !== id);
-            localStorage.setItem('myReviewIds', JSON.stringify(newMyIds));
-            
-            renderReviews();
-        }
-    };
-
-    renderReviews();
-</script>
-
-</body>
-</html>
+       
