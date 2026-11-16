@@ -16,16 +16,14 @@
         
         .header-right { display: flex; align-items: center; gap: 20px; }
         
-        /* Кнопка меню (три полоски) */
         .menu-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; z-index: 101; }
         .menu-btn span { display: block; width: 24px; height: 2px; background-color: #4A3F35; border-radius: 2px; transition: background 0.2s; }
         .menu-btn:hover span { background-color: #8B7355; }
 
-        /* Иконка корзины */
         .cart-icon { position: relative; cursor: pointer; font-size: 22px; text-decoration: none; color: #4A3F35; }
         .cart-count { position: absolute; top: -8px; right: -10px; background: #C4A882; color: #fff; font-size: 11px; font-weight: 600; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* Выдвижное меню (Сайдбар) */
+        /* Выдвижное меню */
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(74, 63, 53, 0.4); backdrop-filter: blur(2px); z-index: 150; opacity: 0; transition: opacity 0.3s; }
         .sidebar-overlay.active { display: block; opacity: 1; }
         .sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #FFFFFF; z-index: 200; box-shadow: 4px 0 20px rgba(180, 160, 140, 0.15); transition: left 0.3s ease; padding: 30px 24px; display: flex; flex-direction: column; }
@@ -59,9 +57,13 @@
         .product-info { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
         .product-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #4A3F35; margin-bottom: 4px; }
         .product-brand { font-size: 12px; color: #B8A89A; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .product-desc { font-size: 13px; color: #6B5F54; margin-bottom: 12px; flex: 1; }
+        
+        .volume-select { width: 100%; padding: 8px 10px; border: 1px solid #EAE0D5; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 13px; color: #4A3F35; background: #FDFBF7; margin-bottom: 12px; outline: none; cursor: pointer; }
+        .volume-select:focus { border-color: #C4A882; }
+
         .product-price { font-size: 20px; font-weight: 600; color: #8B7355; margin-bottom: 12px; }
 
-        /* Кнопка наличия */
         .stock-toggle { display: inline-flex; align-items: center; gap: 8px; background: #F7F2EB; border: none; border-radius: 30px; padding: 6px 14px 6px 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 500; color: #6B5F54; margin-bottom: 14px; transition: background 0.2s; width: fit-content; }
         .stock-toggle:hover { background: #EFE8DE; }
         .stock-indicator { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
@@ -73,7 +75,7 @@
         .btn-order:active:not(:disabled) { transform: scale(0.98); }
         .btn-order:disabled { background: #D9D0C7; cursor: not-allowed; color: #A89A8C; }
 
-        /* Стили для отзывов */
+        /* Отзывы */
         .reviews-section { max-width: 1100px; margin: 0 auto; padding: 20px 24px 70px; }
         .review-form { background: #FFFFFF; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(180, 160, 140, 0.1); margin-bottom: 30px; }
         .review-form input, .review-form textarea { width: 100%; padding: 12px 14px; border: 1px solid #EAE0D5; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #4A3F35; background: #FDFBF7; margin-bottom: 12px; outline: none; transition: border 0.2s; resize: vertical; }
@@ -230,13 +232,45 @@
 
 <script>
     // ============================================================
-    // ⚠️ ТОВАРЫ
+    // ⚠️ ТОВАРЫ — ВПИШИТЕ РЕАЛЬНЫЕ ЦЕНЫ ЗА 3 МЛ
     // ============================================================
     const products = [
-        { id: 1, name: "Cedar Chic", brand: "Carolina Herrera", price: 4500, image: "", inStock: true },
-        { id: 2, name: "Amouage (аромат)", brand: "Amouage", price: 8900, image: "", inStock: true },
-        { id: 3, name: "Роза и мускус", brand: "Aromat Kungur", price: 2500, image: "", inStock: true },
-        { id: 4, name: "Ваниль и амбра", brand: "Aromat Kungur", price: 2800, image: "", inStock: false }
+        {
+            id: 1,
+            name: "Dirty Pineapple",
+            brand: "Richard",
+            price3ml: 1500, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            image: "",
+            inStock: true,
+            desc: "Верхние ноты: Ананас, Клубника и Альдегиды; средние ноты: Ананас, Взбитые сливки и Лайм; базовые ноты: Ананас, Мускус и Ваниль."
+        },
+        {
+            id: 2,
+            name: "Tilia",
+            brand: "Marc-Antoine Barrois",
+            price3ml: 1800, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            image: "",
+            inStock: true,
+            desc: "Цветочный древесно-мускусный аромат. Верхние ноты: Липовый цвет, Жасмин Самбак и Дрок; средние ноты: Гелиотроп, Ветивер и Цветок апельсина; базовые ноты: Ambrofix™ и Georgywood."
+        },
+        {
+            id: 3,
+            name: "Ganymede",
+            brand: "Marc-Antoine Barrois",
+            price3ml: 1800, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            image: "",
+            inStock: true,
+            desc: "Замшево-кожаные ноты с легкостью фиалки и живостью мандарина. Контрастный и элегантный аромат."
+        },
+        {
+            id: 4,
+            name: "Apres I Amour",
+            brand: "Тomas Kosmala no 4",
+            price3ml: 1600, // <-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ЦЕНУ
+            image: "",
+            inStock: true,
+            desc: "Роскошный и сексуальный аромат. Стартует зелеными прохладными акцентами листьев апельсина и пряной цедры лимона. Шлейф из сухой древесины, амбры и мускуса."
+        }
     ];
 
     let cart = [];
@@ -251,18 +285,34 @@
     closeSidebarBtn.addEventListener('click', () => { sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
     sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
 
-    // --- Карточки товаров ---
+    // --- Отрисовка карточек товаров ---
     const grid = document.getElementById('productsGrid');
     products.forEach(p => {
         const card = document.createElement('div');
         card.className = 'product-card';
         const imgContent = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="placeholder-text">📷 Фото: ${p.name}</span>`;
+
+        // Считаем цены для разных объемов (3 мл = базовая)
+        const p5 = Math.round(p.price3ml * 1.6);
+        const p10 = Math.round(p.price3ml * 3);
+        const pFull = Math.round(p.price3ml * 15);
+
         card.innerHTML = `
             <div class="product-image">${imgContent}</div>
             <div class="product-info">
                 <div class="product-name">${p.name}</div>
                 <div class="product-brand">${p.brand}</div>
-                <div class="product-price">${p.price.toLocaleString('ru-RU')} ₽</div>
+                <div class="product-desc">${p.desc}</div>
+                
+                <select class="volume-select" data-id="${p.id}">
+                    <option value="3" data-price="${p.price3ml}">3 мл — ${p.price3ml.toLocaleString('ru-RU')} ₽</option>
+                    <option value="5" data-price="${p5}">5 мл — ${p5.toLocaleString('ru-RU')} ₽</option>
+                    <option value="10" data-price="${p10}">10 мл — ${p10.toLocaleString('ru-RU')} ₽</option>
+                    <option value="full" data-price="${pFull}">Полный флакон — ${pFull.toLocaleString('ru-RU')} ₽</option>
+                </select>
+
+                <div class="product-price" id="price-display-${p.id}">${p.price3ml.toLocaleString('ru-RU')} ₽</div>
+
                 <button class="stock-toggle" data-id="${p.id}">
                     <span class="stock-indicator ${p.inStock ? 'in-stock' : 'out-of-stock'}"></span>
                     <span class="stock-label">${p.inStock ? 'В наличии' : 'Нет в наличии'}</span>
@@ -273,6 +323,16 @@
             </div>
         `;
         grid.appendChild(card);
+    });
+
+    // --- Обновление цены при выборе объема ---
+    document.querySelectorAll('.volume-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const id = this.dataset.id;
+            const selectedOption = this.options[this.selectedIndex];
+            const price = selectedOption.dataset.price;
+            document.getElementById(`price-display-${id}`).textContent = parseInt(price).toLocaleString('ru-RU') + ' ₽';
+        });
     });
 
     // --- Кнопка наличия ---
@@ -309,7 +369,7 @@
         alert('⏳ Корзина и оформление заказов находятся в разработке.\n\nПока вы можете заказать духи, написав нам в соцсетях или позвонив по телефону внизу страницы.');
     });
 
-    // --- ОТЗЫВЫ (ИСПРАВЛЕНО) ---
+    // --- ОТЗЫВЫ ---
     const reviewsList = document.getElementById('reviewsList');
     const reviewNameInput = document.getElementById('reviewName');
     const reviewTextInput = document.getElementById('reviewText');
@@ -350,8 +410,6 @@
             card.className = 'review-card';
             
             const isMyReview = myIds.includes(rev.id);
-            
-            // ВАЖНО: передаем именно строковый ID в функцию
             const deleteBtnHtml = isMyReview 
                 ? `<button class="btn-delete-review" onclick="deleteReview('${rev.id}')">Удалить</button>` 
                 : '';
@@ -377,42 +435,4 @@
 
         const reviews = loadReviews();
         const now = new Date();
-        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-        
-        const newId = Date.now().toString();
-        const newReview = { id: newId, name: name, text: text, date: dateStr };
-        
-        reviews.push(newReview);
-        saveReviews(reviews);
-        saveMyReviewId(newId);
-        
-        reviewNameInput.value = '';
-        reviewTextInput.value = '';
-        renderReviews();
-    });
-
-    window.deleteReview = function(id) {
-        const myIds = getMyReviewIds();
-        
-        if (!myIds.includes(id)) {
-            alert('Вы не можете удалить чужой отзыв!');
-            return;
-        }
-
-        if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
-            let reviews = loadReviews();
-            reviews = reviews.filter(rev => rev.id !== id);
-            saveReviews(reviews);
-            
-            const newMyIds = myIds.filter(myId => myId !== id);
-            localStorage.setItem('myReviewIds', JSON.stringify(newMyIds));
-            
-            renderReviews();
-        }
-    };
-
-    renderReviews();
-</script>
-
-</body>
-</html>
+        const dateStr = now.toLocaleDate
