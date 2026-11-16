@@ -9,21 +9,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Montserrat', sans-serif; background-color: #FDFBF7; color: #4A3F35; line-height: 1.6; }
 
-        /* Шапка */
         .header { background: #FFFFFF; border-bottom: 1px solid #EAE0D5; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(180, 160, 140, 0.08); }
         .logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; letter-spacing: 2px; color: #8B7355; text-decoration: none; white-space: nowrap; }
         .logo span { font-weight: 400; font-style: italic; color: #B8A89A; }
-        
         .header-right { display: flex; align-items: center; gap: 20px; }
-        
         .menu-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; z-index: 101; }
         .menu-btn span { display: block; width: 24px; height: 2px; background-color: #4A3F35; border-radius: 2px; transition: background 0.2s; }
         .menu-btn:hover span { background-color: #8B7355; }
-
         .cart-icon { position: relative; cursor: pointer; font-size: 22px; text-decoration: none; color: #4A3F35; }
         .cart-count { position: absolute; top: -8px; right: -10px; background: #C4A882; color: #fff; font-size: 11px; font-weight: 600; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* Выдвижное меню */
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(74, 63, 53, 0.4); backdrop-filter: blur(2px); z-index: 150; opacity: 0; transition: opacity 0.3s; }
         .sidebar-overlay.active { display: block; opacity: 1; }
         .sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #FFFFFF; z-index: 200; box-shadow: 4px 0 20px rgba(180, 160, 140, 0.15); transition: left 0.3s ease; padding: 30px 24px; display: flex; flex-direction: column; }
@@ -33,17 +28,14 @@
         .sidebar a:hover { background: #F7F2EB; color: #8B7355; }
         .close-sidebar { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; color: #B8A89A; cursor: pointer; }
 
-        /* Навигация */
         .nav-menu { background: #FFFFFF; padding: 12px 24px; display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; border-bottom: 1px solid #F0EAE2; font-size: 14px; letter-spacing: 0.5px; }
         .nav-menu a { color: #6B5F54; text-decoration: none; padding: 6px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .nav-menu a:hover { color: #8B7355; border-bottom-color: #C4A882; }
 
-        /* Главный экран */
         .hero { background: linear-gradient(135deg, #F7F2EB 0%, #EFE8DE 100%); padding: 60px 24px 50px; text-align: center; }
         .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 400; color: #4A3F35; margin-bottom: 12px; letter-spacing: 1px; }
         .hero p { font-size: 16px; color: #9A8A7A; max-width: 600px; margin: 0 auto; font-weight: 300; }
 
-        /* Товары */
         .products-section { max-width: 1100px; margin: 0 auto; padding: 50px 24px 70px; }
         .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; text-align: center; color: #4A3F35; margin-bottom: 40px; font-weight: 400; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 28px; }
@@ -61,7 +53,6 @@
         
         .volume-select { width: 100%; padding: 8px 10px; border: 1px solid #EAE0D5; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 13px; color: #4A3F35; background: #FDFBF7; margin-bottom: 12px; outline: none; cursor: pointer; }
         .volume-select:focus { border-color: #C4A882; }
-
         .product-price { font-size: 20px; font-weight: 600; color: #8B7355; margin-bottom: 12px; }
 
         .stock-status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #6B5F54; margin-bottom: 12px; }
@@ -78,7 +69,6 @@
         .btn-order:active:not(:disabled) { transform: scale(0.98); }
         .btn-order:disabled { background: #D9D0C7; cursor: not-allowed; color: #A89A8C; }
 
-        /* Отзывы */
         .reviews-section { max-width: 1100px; margin: 0 auto; padding: 20px 24px 70px; }
         .review-form { background: #FFFFFF; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(180, 160, 140, 0.1); margin-bottom: 30px; }
         .review-form input, .review-form textarea { width: 100%; padding: 12px 14px; border: 1px solid #EAE0D5; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #4A3F35; background: #FDFBF7; margin-bottom: 12px; outline: none; transition: border 0.2s; resize: vertical; }
@@ -94,7 +84,6 @@
         .btn-delete-review { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #D4A5A5; cursor: pointer; font-size: 12px; transition: color 0.2s; }
         .btn-delete-review:hover { color: #B06060; text-decoration: underline; }
 
-        /* Модальные окна */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(74, 63, 53, 0.4); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: #FFFFFF; border-radius: 20px; max-width: 480px; width: 100%; padding: 32px 28px; box-shadow: 0 20px 60px rgba(74, 63, 53, 0.25); max-height: 90vh; overflow-y: auto; position: relative; }
@@ -107,7 +96,6 @@
         .modal .btn-pay:hover { background: #7A6548; }
         .modal .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 28px; color: #B8A89A; cursor: pointer; line-height: 1; }
 
-        /* Корзина */
         .cart-empty { text-align: center; padding: 40px 0; font-size: 16px; color: #9A8A7A; }
         .cart-item { display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #F0EAE2; padding: 15px 0; }
         .cart-item:last-child { border-bottom: none; }
@@ -119,7 +107,6 @@
         .btn-remove:hover { color: #B06060; text-decoration: underline; }
         .cart-total { text-align: right; font-size: 18px; font-weight: 600; color: #4A3F35; margin-top: 20px; margin-bottom: 10px; }
 
-        /* Подвал */
         .footer { background: #FFFFFF; border-top: 1px solid #EAE0D5; padding: 40px 24px; text-align: center; font-size: 13px; color: #9A8A7A; }
         .footer .phone-footer { font-size: 18px; font-weight: 500; color: #4A3F35; text-decoration: none; display: inline-block; margin: 10px 0; }
         .footer .phone-footer:hover { color: #8B7355; }
@@ -152,9 +139,7 @@
 <header class="header">
     <a href="#" class="logo">Aromat <span>Kungur</span></a>
     <div class="header-right">
-        <button class="menu-btn" id="menuBtn" title="Меню">
-            <span></span><span></span><span></span>
-        </button>
+        <button class="menu-btn" id="menuBtn" title="Меню"><span></span><span></span><span></span></button>
         <a href="#" class="cart-icon" id="cartIcon" title="Корзина">🛒<span class="cart-count" id="cartCount">0</span></a>
     </div>
 </header>
@@ -237,11 +222,8 @@
     // ============================================================
     // ⚠️ НАСТРОЙКА АДМИН-РЕЖИМА
     // ============================================================
-    // Секретный ключ. Чтобы включить админку, добавьте в адресную строку: ?admin=arom2026
     const ADMIN_KEY = 'arom2026'; 
     const isAdmin = window.location.search.includes(`admin=${ADMIN_KEY}`);
-
-    // Если это админ, добавляем класс на body, который покажет кнопки
     if (isAdmin) {
         document.body.classList.add('admin-mode');
     }
@@ -309,7 +291,6 @@
         const pFull = Math.round(p.price3ml * 15);
 
         const imgContent = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="placeholder-text">📷 Фото: ${p.name}</span>`;
-        
         const stockHtml = p.inStock 
             ? `<div class="stock-status"><span class="stock-indicator in-stock"></span> В наличии</div>`
             : `<div class="stock-status"><span class="stock-indicator out-of-stock"></span> Нет в наличии</div>`;
@@ -322,19 +303,15 @@
                 <div class="product-name">${p.name}</div>
                 <div class="product-brand">${p.brand}</div>
                 <div class="product-desc">${p.desc}</div>
-                
                 <select class="volume-select" data-id="${p.id}">
                     <option value="3" data-price="${p.price3ml}">3 мл — ${p.price3ml.toLocaleString('ru-RU')} ₽</option>
                     <option value="5" data-price="${p5}">5 мл — ${p5.toLocaleString('ru-RU')} ₽</option>
                     <option value="10" data-price="${p10}">10 мл — ${p10.toLocaleString('ru-RU')} ₽</option>
                     <option value="full" data-price="${pFull}">Полный флакон — ${pFull.toLocaleString('ru-RU')} ₽</option>
                 </select>
-
                 <div class="product-price" id="price-display-${p.id}">${p.price3ml.toLocaleString('ru-RU')} ₽</div>
-
                 ${stockHtml}
                 ${adminBtnHtml}
-                
                 <button class="btn-order" data-id="${p.id}" ${p.inStock ? '' : 'disabled'}>
                     ${p.inStock ? 'Заказать' : 'Недоступно'}
                 </button>
@@ -342,15 +319,19 @@
         `;
     }
 
-    products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.id = `card-${p.id}`;
-        card.innerHTML = renderProductCard(p);
-        grid.appendChild(card);
-    });
+    function renderAllProducts() {
+        grid.innerHTML = '';
+        products.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.id = `card-${p.id}`;
+            card.innerHTML = renderProductCard(p);
+            grid.appendChild(card);
+        });
+        attachVolumeListeners();
+        attachOrderListeners();
+    }
 
-    // --- Обновление цены при выборе объема ---
     function attachVolumeListeners() {
         document.querySelectorAll('.volume-select').forEach(select => {
             select.addEventListener('change', function() {
@@ -361,51 +342,37 @@
             });
         });
     }
-    attachVolumeListeners();
 
-    // --- Функция переключения наличия (только для админа) ---
+    function attachOrderListeners() {
+        document.querySelectorAll('.btn-order').forEach(btn => {
+            btn.onclick = function(e) {
+                e.preventDefault();
+                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату. Совсем скоро вы сможете заказать духи прямо на сайте!');
+            };
+        });
+    }
+
     window.toggleStock = function(id) {
         if (!isAdmin) {
             alert('У вас нет прав для изменения наличия.');
             return;
         }
-
         const product = products.find(p => p.id === id);
-        if (!product) return;
-
-        product.inStock = !product.inStock;
-
-        // Перерисовываем карточку
-        const card = document.getElementById(`card-${id}`);
-        card.innerHTML = renderProductCard(product);
-
-        // Переназначаем обработчики
-        attachVolumeListeners();
-        attachOrderListeners();
+        if (product) {
+            product.inStock = !product.inStock;
+            renderAllProducts();
+        }
     };
 
-    // --- БЛОКИРОВКА ЗАКАЗА ---
-    function attachOrderListeners() {
-        document.querySelectorAll('.btn-order').forEach(btn => {
-            // Удаляем старый обработчик, чтобы не было дублей
-            btn.replaceWith(btn.cloneNode(true));
-        });
-        
-        document.querySelectorAll('.btn-order').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату. Совсем скоро вы сможете заказать духи прямо на сайте!');
-            });
-        });
-    }
-    attachOrderListeners();
+    renderAllProducts();
 
+    // --- Корзина ---
     document.getElementById('cartIcon').addEventListener('click', function(e) {
         e.preventDefault();
         alert('⏳ Корзина и оформление заказов находятся в разработке.\n\nПока вы можете заказать духи, написав нам в соцсетях или позвонив по телефону внизу страницы.');
     });
 
-    // --- ОТЗЫВЫ ---
+    // --- Отзывы ---
     const reviewsList = document.getElementById('reviewsList');
     const reviewNameInput = document.getElementById('reviewName');
     const reviewTextInput = document.getElementById('reviewText');
@@ -444,12 +411,8 @@
         [...reviews].reverse().forEach((rev) => {
             const card = document.createElement('div');
             card.className = 'review-card';
-            
             const isMyReview = myIds.includes(rev.id);
-            const deleteBtnHtml = isMyReview 
-                ? `<button class="btn-delete-review" onclick="deleteReview('${rev.id}')">Удалить</button>` 
-                : '';
-
+            const deleteBtnHtml = isMyReview ? `<button class="btn-delete-review" onclick="deleteReview('${rev.id}')">Удалить</button>` : '';
             card.innerHTML = `
                 ${deleteBtnHtml}
                 <div class="review-author">${rev.name}</div>
@@ -462,4 +425,42 @@
 
     btnSubmitReview.addEventListener('click', () => {
         const name = reviewNameInput.value.trim();
-        const text =
+        const text = reviewTextInput.value.trim();
+        if (!name || !text) {
+            alert('Пожалуйста, заполните имя и текст отзыва.');
+            return;
+        }
+        const reviews = loadReviews();
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+        const newId = Date.now().toString();
+        const newReview = { id: newId, name: name, text: text, date: dateStr };
+        reviews.push(newReview);
+        saveReviews(reviews);
+        saveMyReviewId(newId);
+        reviewNameInput.value = '';
+        reviewTextInput.value = '';
+        renderReviews();
+    });
+
+    window.deleteReview = function(id) {
+        const myIds = getMyReviewIds();
+        if (!myIds.includes(id)) {
+            alert('Вы не можете удалить чужой отзыв!');
+            return;
+        }
+        if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
+            let reviews = loadReviews();
+            reviews = reviews.filter(rev => rev.id !== id);
+            saveReviews(reviews);
+            const newMyIds = myIds.filter(myId => myId !== id);
+            localStorage.setItem('myReviewIds', JSON.stringify(newMyIds));
+            renderReviews();
+        }
+    };
+
+    renderReviews();
+</script>
+
+</body>
+</html>
