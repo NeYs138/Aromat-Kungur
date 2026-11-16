@@ -435,4 +435,42 @@
 
         const reviews = loadReviews();
         const now = new Date();
-        const dateStr = now.toLocaleDate
+        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        const newId = Date.now().toString();
+        const newReview = { id: newId, name: name, text: text, date: dateStr };
+        
+        reviews.push(newReview);
+        saveReviews(reviews);
+        saveMyReviewId(newId);
+        
+        reviewNameInput.value = '';
+        reviewTextInput.value = '';
+        renderReviews();
+    });
+
+    window.deleteReview = function(id) {
+        const myIds = getMyReviewIds();
+        
+        if (!myIds.includes(id)) {
+            alert('Вы не можете удалить чужой отзыв!');
+            return;
+        }
+
+        if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
+            let reviews = loadReviews();
+            reviews = reviews.filter(rev => rev.id !== id);
+            saveReviews(reviews);
+            
+            const newMyIds = myIds.filter(myId => myId !== id);
+            localStorage.setItem('myReviewIds', JSON.stringify(newMyIds));
+            
+            renderReviews();
+        }
+    };
+
+    renderReviews();
+</script>
+
+</body>
+</html>
