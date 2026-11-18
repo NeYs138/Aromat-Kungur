@@ -229,54 +229,20 @@
     }
 
     // ============================================================
-    // ⚠️ ТОВАРЫ
+    // ⚠️ ТОВАРЫ (Базовые данные)
     // ============================================================
     const defaultProducts = [
-        {
-            id: 1,
-            name: "Dirty Pineapple",
-            brand: "Richard",
-            price3ml: 1500,
-            image: "",
-            inStock: true,
-            desc: "Верхние ноты: Ананас, Клубника и Альдегиды; средние ноты: Ананас, Взбитые сливки и Лайм; базовые ноты: Ананас, Мускус и Ваниль."
-        },
-        {
-            id: 2,
-            name: "Tilia",
-            brand: "Marc-Antoine Barrois",
-            price3ml: 1800,
-            image: "",
-            inStock: true,
-            desc: "Цветочный древесно-мускусный аромат. Верхние ноты: Липовый цвет, Жасмин Самбак и Дрок; средние ноты: Гелиотроп, Ветивер и Цветок апельсина; базовые ноты: Ambrofix™ и Georgywood."
-        },
-        {
-            id: 3,
-            name: "Ganymede",
-            brand: "Marc-Antoine Barrois",
-            price3ml: 1800,
-            image: "",
-            inStock: true,
-            desc: "Замшево-кожаные ноты с легкостью фиалки и живостью мандарина. Контрастный и элегантный аромат."
-        },
-        {
-            id: 4,
-            name: "Apres I Amour",
-            brand: "Тomas Kosmala no 4",
-            price3ml: 1600,
-            image: "",
-            inStock: true,
-            desc: "Роскошный и сексуальный аромат. Стартует зелеными прохладными акцентами листьев апельсина и пряной цедры лимона. Шлейф из сухой древесины, амбры и мускуса."
-        }
+        { id: 1, name: "Dirty Pineapple", brand: "Richard", price3ml: 1500, image: "", inStock: true, desc: "Верхние ноты: Ананас, Клубника и Альдегиды; средние ноты: Ананас, Взбитые сливки и Лайм; базовые ноты: Ананас, Мускус и Ваниль." },
+        { id: 2, name: "Tilia", brand: "Marc-Antoine Barrois", price3ml: 1800, image: "", inStock: true, desc: "Цветочный древесно-мускусный аромат. Верхние ноты: Липовый цвет, Жасмин Самбак и Дрок; средние ноты: Гелиотроп, Ветивер и Цветок апельсина; базовые ноты: Ambrofix™ и Georgywood." },
+        { id: 3, name: "Ganymede", brand: "Marc-Antoine Barrois", price3ml: 1800, image: "", inStock: true, desc: "Замшево-кожаные ноты с легкостью фиалки и живостью мандарина. Контрастный и элегантный аромат." },
+        { id: 4, name: "Apres I Amour", brand: "Тomas Kosmala no 4", price3ml: 1600, image: "", inStock: true, desc: "Роскошный и сексуальный аромат. Стартует зелеными прохладными акцентами листьев апельсина и пряной цедры лимона. Шлейф из сухой древесины, амбры и мускуса." }
     ];
 
-    // --- Логика сохранения наличия в LocalStorage ---
-    // Мы сохраняем только статус наличия (id: true/false), чтобы при обновлении страницы он не сбрасывался
+    // Загрузка актуального наличия из памяти браузера
     function loadProducts() {
         const saved = localStorage.getItem('aromStockStatus');
         if (saved) {
             const stockStatus = JSON.parse(saved);
-            // Обновляем статус в товарах на основе сохраненных данных
             return defaultProducts.map(p => ({
                 ...p,
                 inStock: stockStatus[p.id] !== undefined ? stockStatus[p.id] : p.inStock
@@ -285,6 +251,7 @@
         return defaultProducts;
     }
 
+    // Сохранение статуса наличия
     function saveProductStock(id, inStock) {
         const saved = localStorage.getItem('aromStockStatus');
         let stockStatus = saved ? JSON.parse(saved) : {};
@@ -305,15 +272,15 @@
     closeSidebarBtn.addEventListener('click', () => { sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
     sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
 
-    // --- Отрисовка карточек товаров ---
+    // --- Отрисовка карточек ---
     const grid = document.getElementById('productsGrid');
     
     function renderProductCard(p) {
         const p5 = Math.round(p.price3ml * 1.6);
         const p10 = Math.round(p.price3ml * 3);
         const pFull = Math.round(p.price3ml * 15);
-
         const imgContent = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="placeholder-text">📷 Фото: ${p.name}</span>`;
+        
         const stockHtml = p.inStock 
             ? `<div class="stock-status"><span class="stock-indicator in-stock"></span> В наличии</div>`
             : `<div class="stock-status"><span class="stock-indicator out-of-stock"></span> Нет в наличии</div>`;
@@ -370,20 +337,16 @@
         document.querySelectorAll('.btn-order').forEach(btn => {
             btn.onclick = function(e) {
                 e.preventDefault();
-                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату. Совсем скоро вы сможете заказать духи прямо на сайте!');
+                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату.');
             };
         });
     }
 
     window.toggleStock = function(id) {
-        if (!isAdmin) {
-            alert('У вас нет прав для изменения наличия.');
-            return;
-        }
+        if (!isAdmin) return;
         const product = products.find(p => p.id === id);
         if (product) {
             product.inStock = !product.inStock;
-            // СОХРАНЯЕМ изменение в память браузера
             saveProductStock(id, product.inStock);
             renderAllProducts();
         }
@@ -394,7 +357,7 @@
     // --- Корзина ---
     document.getElementById('cartIcon').addEventListener('click', function(e) {
         e.preventDefault();
-        alert('⏳ Корзина и оформление заказов находятся в разработке.\n\nПока вы можете заказать духи, написав нам в соцсетях или позвонив по телефону внизу страницы.');
+        alert('⏳ Корзина в разработке.');
     });
 
     // --- Отзывы ---
@@ -427,12 +390,10 @@
         const reviews = loadReviews();
         const myIds = getMyReviewIds();
         reviewsList.innerHTML = '';
-        
         if (reviews.length === 0) {
             reviewsList.innerHTML = '<div style="color:#9A8A7A; grid-column: 1/-1; text-align:center;">Пока нет отзывов. Будьте первым!</div>';
             return;
         }
-
         [...reviews].reverse().forEach((rev) => {
             const card = document.createElement('div');
             card.className = 'review-card';
@@ -451,4 +412,40 @@
     btnSubmitReview.addEventListener('click', () => {
         const name = reviewNameInput.value.trim();
         const text = reviewTextInput.value.trim();
-        if (!name || !
+        if (!name || !text) {
+            alert('Пожалуйста, заполните имя и текст отзыва.');
+            return;
+        }
+        const reviews = loadReviews();
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+        const newId = Date.now().toString();
+        reviews.push({ id: newId, name: name, text: text, date: dateStr });
+        saveReviews(reviews);
+        saveMyReviewId(newId);
+        reviewNameInput.value = '';
+        reviewTextInput.value = '';
+        renderReviews();
+    });
+
+    window.deleteReview = function(id) {
+        const myIds = getMyReviewIds();
+        if (!myIds.includes(id)) {
+            alert('Вы не можете удалить чужой отзыв!');
+            return;
+        }
+        if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
+            let reviews = loadReviews();
+            reviews = reviews.filter(rev => rev.id !== id);
+            saveReviews(reviews);
+            const newMyIds = myIds.filter(myId => myId !== id);
+            localStorage.setItem('myReviewIds', JSON.stringify(newMyIds));
+            renderReviews();
+        }
+    };
+
+    renderReviews();
+</script>
+
+</body>
+</html>
