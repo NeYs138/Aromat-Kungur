@@ -231,7 +231,7 @@
     // ============================================================
     // ⚠️ ТОВАРЫ
     // ============================================================
-    const products = [
+    const defaultProducts = [
         {
             id: 1,
             name: "Dirty Pineapple",
@@ -270,6 +270,29 @@
         }
     ];
 
+    // --- Логика сохранения наличия в LocalStorage ---
+    // Мы сохраняем только статус наличия (id: true/false), чтобы при обновлении страницы он не сбрасывался
+    function loadProducts() {
+        const saved = localStorage.getItem('aromStockStatus');
+        if (saved) {
+            const stockStatus = JSON.parse(saved);
+            // Обновляем статус в товарах на основе сохраненных данных
+            return defaultProducts.map(p => ({
+                ...p,
+                inStock: stockStatus[p.id] !== undefined ? stockStatus[p.id] : p.inStock
+            }));
+        }
+        return defaultProducts;
+    }
+
+    function saveProductStock(id, inStock) {
+        const saved = localStorage.getItem('aromStockStatus');
+        let stockStatus = saved ? JSON.parse(saved) : {};
+        stockStatus[id] = inStock;
+        localStorage.setItem('aromStockStatus', JSON.stringify(stockStatus));
+    }
+
+    let products = loadProducts();
     let cart = [];
 
     // --- Меню ---
@@ -360,6 +383,8 @@
         const product = products.find(p => p.id === id);
         if (product) {
             product.inStock = !product.inStock;
+            // СОХРАНЯЕМ изменение в память браузера
+            saveProductStock(id, product.inStock);
             renderAllProducts();
         }
     };
@@ -426,41 +451,4 @@
     btnSubmitReview.addEventListener('click', () => {
         const name = reviewNameInput.value.trim();
         const text = reviewTextInput.value.trim();
-        if (!name || !text) {
-            alert('Пожалуйста, заполните имя и текст отзыва.');
-            return;
-        }
-        const reviews = loadReviews();
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-        const newId = Date.now().toString();
-        const newReview = { id: newId, name: name, text: text, date: dateStr };
-        reviews.push(newReview);
-        saveReviews(reviews);
-        saveMyReviewId(newId);
-        reviewNameInput.value = '';
-        reviewTextInput.value = '';
-        renderReviews();
-    });
-
-    window.deleteReview = function(id) {
-        const myIds = getMyReviewIds();
-        if (!myIds.includes(id)) {
-            alert('Вы не можете удалить чужой отзыв!');
-            return;
-        }
-        if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
-            let reviews = loadReviews();
-            reviews = reviews.filter(rev => rev.id !== id);
-            saveReviews(reviews);
-            const newMyIds = myIds.filter(myId => myId !== id);
-            localStorage.setItem('myReviewIds', JSON.stringify(newMyIds));
-            renderReviews();
-        }
-    };
-
-    renderReviews();
-</script>
-
-</body>
-</html>
+        if (!name || !
