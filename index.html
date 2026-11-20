@@ -229,7 +229,7 @@
     }
 
     // ============================================================
-    // ⚠️ ТОВАРЫ (Базовые данные)
+    // ⚠️ ТОВАРЫ
     // ============================================================
     const defaultProducts = [
         { id: 1, name: "Dirty Pineapple", brand: "Richard", price3ml: 1500, image: "", inStock: true, desc: "Верхние ноты: Ананас, Клубника и Альдегиды; средние ноты: Ананас, Взбитые сливки и Лайм; базовые ноты: Ананас, Мускус и Ваниль." },
@@ -238,7 +238,6 @@
         { id: 4, name: "Apres I Amour", brand: "Тomas Kosmala no 4", price3ml: 1600, image: "", inStock: true, desc: "Роскошный и сексуальный аромат. Стартует зелеными прохладными акцентами листьев апельсина и пряной цедры лимона. Шлейф из сухой древесины, амбры и мускуса." }
     ];
 
-    // Загрузка актуального наличия из памяти браузера
     function loadProducts() {
         const saved = localStorage.getItem('aromStockStatus');
         if (saved) {
@@ -251,7 +250,6 @@
         return defaultProducts;
     }
 
-    // Сохранение статуса наличия
     function saveProductStock(id, inStock) {
         const saved = localStorage.getItem('aromStockStatus');
         let stockStatus = saved ? JSON.parse(saved) : {};
@@ -337,7 +335,25 @@
         document.querySelectorAll('.btn-order').forEach(btn => {
             btn.onclick = function(e) {
                 e.preventDefault();
-                alert('⏳ Оформление заказа пока недоступно.\n\nМы дорабатываем корзину и онлайн-оплату.');
+                const id = parseInt(this.dataset.id);
+                const product = products.find(p => p.id === id);
+                if (!product || !product.inStock) return;
+
+                // Получаем выбранный объем и цену
+                const card = this.closest('.product-card');
+                const select = card.querySelector('.volume-select');
+                const volume = select.options[select.selectedIndex].text.split(' — ')[0];
+                const price = parseInt(select.options[select.selectedIndex].dataset.price);
+
+                // Добавляем в корзину
+                const existingItem = cart.find(item => item.id === id && item.volume === volume);
+                if (existingItem) {
+                    alert('Этот товар с таким объемом уже в корзине.');
+                    return;
+                }
+                cart.push({ ...product, volume, price });
+                updateCartUI();
+                document.getElementById('cartModalOverlay').classList.add('active');
             };
         });
     }
@@ -355,9 +371,98 @@
     renderAllProducts();
 
     // --- Корзина ---
+    function updateCartUI() {
+        const cartCountEl = document.getElementById('cartCount');
+        const cartContentEl = document.getElementById('cartContent');
+        cartCountEl.textContent = cart.length;
+
+        if (cart.length === 0) {
+            cartContentEl.innerHTML = '<div class="cart-empty">В корзине пока нет товаров</div>';
+            return;
+        }
+
+        let total = 0;
+        let html = '';
+        cart.forEach((item, index) => {
+            total += item.price;
+            const img = item.image ? `<img src="${item.image}" class="cart-item-img">` : `<div class="cart-item-img"></div>`;
+            html += `
+                <div class="cart-item">
+                    ${img}
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.name} (${item.volume})</div>
+                        <div class="cart-item-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+                    </div>
+                    <button class="btn-remove" onclick="removeFromCart(${index})">Удалить</button>
+                </div>
+            `;
+        });
+        html += `<div class="cart-total">Итого: ${total.toLocaleString('ru-RU')} ₽</div>`;
+        html += `<button class="btn-pay" id="btnCheckout">Оформить заказ</button>`;
+        cartContentEl.innerHTML = html;
+
+        document.getElementById('btnCheckout').addEventListener('click', openCheckoutModal);
+    }
+
+    window.removeFromCart = function(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+    };
+
     document.getElementById('cartIcon').addEventListener('click', function(e) {
         e.preventDefault();
-        alert('⏳ Корзина в разработке.');
+        updateCartUI();
+        document.getElementById('cartModalOverlay').classList.add('active');
+    });
+
+    document.getElementById('closeCartModal').addEventListener('click', () => {
+        document.getElementById('cartModalOverlay').classList.remove('active');
+    });
+    document.getElementById('cartModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+
+    function openCheckoutModal() {
+        document.getElementById('cartModalOverlay').classList.remove('active');
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        document.getElementById('modalProductName').textContent = 
+            `В заказе товаров: ${cart.length} на сумму ${total.toLocaleString('ru-RU')} ₽`;
+        document.getElementById('checkoutModalOverlay').classList.add('active');
+    }
+
+    document.getElementById('closeCheckoutModal').addEventListener('click', () => {
+        document.getElementById('checkoutModalOverlay').classList.remove('active');
+    });
+    document.getElementById('checkoutModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+
+    document.getElementById('btnPay').addEventListener('click', function() {
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const city = document.getElementById('customerCity').value.trim();
+        const payment = document.getElementById('paymentMethod').value;
+
+        if (!name || !phone || !city) {
+            alert('Пожалуйста, заполните имя, телефон и адрес ПВЗ.');
+            return;
+        }
+
+        const itemsString = cart.map(item => `${item.name} (${item.volume}) - ${item.price}₽`).join(', ');
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+        // ⚠️ ССЫЛКА НА ОПЛАТУ
+        const paymentLink = "https://ВАША_ССЫЛКА_НА_ОПЛАТУ"; 
+
+        if (paymentLink !== "https://ВАША_ССЫЛКА_НА_ОПЛАТУ") {
+            window.location.href = paymentLink;
+        } else {
+            alert('✅ Заказ оформлен (демо)!\n\n' + `Товары: ${itemsString}\nСумма: ${total} ₽\nИмя: ${name}\nТелефон: ${phone}\nПВЗ: ${city}\n\n` + 'Оплата пока не подключена.');
+        }
+
+        cart = [];
+        updateCartUI();
+        document.getElementById('checkoutModalOverlay').classList.remove('active');
     });
 
     // --- Отзывы ---
@@ -445,6 +550,7 @@
     };
 
     renderReviews();
+    updateCartUI();
 </script>
 
 </body>
